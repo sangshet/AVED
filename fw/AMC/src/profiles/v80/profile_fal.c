@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * This file contains the fal profile for the V80
@@ -249,7 +249,7 @@ static FW_IF_OSPI_INIT_CFG myOspiIf =
 static FW_IF_EMMC_INIT_CFG myEmmcIf =
 {
     "EmmcIfCfg",
-    HAL_EMMC_DEVICE_ID
+    HAL_EMMC_BASE_ADDR
 };
 
 static FW_IF_MUXED_DEVICE_INIT_CFG myQsfpIf =

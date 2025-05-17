@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * This file contains the user API definitions for the OSPI device driver.
@@ -499,7 +499,7 @@ int iOSPI_FlashInit( OSPI_CFG_TYPE *pxOspiCfg )
         /* Initialize the OSPIPSV driver so that it's ready to use */
         if( OK == iStatus )
         {
-            pxOspiPsvConfig = XOspiPsv_LookupConfig( pxOspiCfg->ucDeviceId );
+            pxOspiPsvConfig = XOspiPsv_LookupConfig( pxOspiCfg->ulBaseAddr );
             if( NULL == pxOspiPsvConfig )
             {
                 PLL_ERR( OSPI_NAME, "Error: XOspiPsv_LookupConfig failed\r\n" );

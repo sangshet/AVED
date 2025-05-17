@@ -1419,6 +1419,9 @@ void remove_hwmon(struct device *dev)
 {
 	if (!dev)
 		return;
-
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 12, 0)
+	hwmon_device_unregister(dev);
+#else
 	devm_hwmon_device_unregister(dev);
+#endif
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+# Copyright (c) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved.
 # SPDX-License-Identifier: MIT
 
 ################################################################################
@@ -44,13 +44,13 @@ GIT_FILES=(".uncrustify_rtos.cfg" "function_header.txt" "pre-commit" "commit-msg
 function clean() {
     SECTION_START=$SECONDS
     echo "=== Removing BSP, build, and CMake files ==="
-    rm -r $ROOT_DIR/.Xil/
-    rm -r $ROOT_DIR/.metadata/
-    rm -r $BSP_DIR/
-    rm -r $ROOT_DIR/.analytics
-    rm -r $ROOT_DIR/IDE.log
+    rm -rf $ROOT_DIR/.Xil/
+    rm -rf $ROOT_DIR/.metadata/
+    rm -rf $BSP_DIR/
+    rm -rf $ROOT_DIR/.analytics
+    rm -rf $ROOT_DIR/IDE.log
 
-    rm -r $BUILD_DIR
+    rm -rf $BUILD_DIR
     echo "*** Cleaning took $((SECONDS - $SECTION_START)) S ***"
 }
 
@@ -59,7 +59,7 @@ function clean_static_analysis() {
     echo "=== Static analysis clean ==="
     cd $BUILD_DIR
     make clean
-    rm -r coverity/
+    rm -rf coverity/
 
     echo "*** Cleaning took $((SECONDS - $SECTION_START)) S ***"
 }
@@ -137,7 +137,7 @@ while [ $# -gt 0 ]; do
         ### clean AMC application files ###
         if [ -d "$BUILD_DIR" ]; then
             echo "=== Removing $BUILD_DIR ==="
-            rm -r $BUILD_DIR
+            rm -rf $BUILD_DIR
         fi
         exit 0;;
     -amc)
@@ -193,7 +193,7 @@ done
 
 # Remake build direcory
 if [ -d "$BUILD_DIR" ]; then
-    rm -r $BUILD_DIR/
+    rm -rf $BUILD_DIR/
 fi
 mkdir $BUILD_DIR
 

@@ -9,6 +9,7 @@
 #define AMI_DRIVER_H
 
 #include <linux/printk.h>
+#include <linux/version.h>
 
 /* Meta Information */
 #define MDL_VERSION     "1.0.0"
