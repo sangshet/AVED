@@ -273,7 +273,6 @@ int iI2C_ReInit( uint8_t ucDeviceId )
          */
         XIicPs_Config xEngineCfg =
         {
-            .DeviceId     = pxThis->pxI2cCfg[ ucDeviceId ].ucDeviceId,
             .BaseAddress  = pxThis->pxI2cCfg[ ucDeviceId ].ullBaseAddress,
             .InputClockHz = HAL_I2C_DEFAULT_SCLK_RATE
         };
@@ -378,7 +377,6 @@ int iI2C_Init( I2C_CFG_TYPE *pxI2cCfg, uint16_t usBusIdleWaitMs )
              */
             XIicPs_Config xEngineCfg =
             {
-                .DeviceId     = pxI2cCfg[ i ].ucDeviceId,
                 .BaseAddress  = pxI2cCfg[ i ].ullBaseAddress,
                 .InputClockHz = HAL_I2C_DEFAULT_SCLK_RATE
             };

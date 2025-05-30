@@ -69,7 +69,7 @@
 #define HAL_I2C_BUS_0_HW_DEVICE_RESET ( FALSE )
 
 /* Definitions for peripheral CIPS_PSPMC_0_PSV_I2C_1 */
-#define HAL_I2C_BUS_1_DEVICE_ID       ( 0 )
+#define HAL_I2C_BUS_1_DEVICE_ID       ( 1 )
 #define HAL_I2C_BUS_1_BASEADDR        ( XPAR_XIICPS_1_BASEADDR )
 #define HAL_I2C_BUS_1_HIGHADDR        ( XPAR_XIICPS_1_BASEADDR )
 #define HAL_I2C_BUS_1_I2C_CLK_FREQ_HZ ( UTIL_100KHZ )

@@ -424,7 +424,6 @@ int iEMMC_PrintInstanceDetails( void )
     if( TRUE == pxThis->iInitialised )
     {
         PLL_LOG( EMMC_NAME, "CONFIG:\n\r" );
-        PLL_LOG( EMMC_NAME, "DeviceId:              0x%x\n\r", pxThis->pxEmmcConfig->DeviceId );
         PLL_LOG( EMMC_NAME, "BaseAddress:           0x%x\n\r", pxThis->pxEmmcConfig->BaseAddress );
         PLL_LOG( EMMC_NAME, "InputClockHz:          0x%x\n\r", pxThis->pxEmmcConfig->InputClockHz );
         PLL_LOG( EMMC_NAME, "CardDetect:            0x%x\n\r", pxThis->pxEmmcConfig->CardDetect );

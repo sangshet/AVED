@@ -54,6 +54,7 @@ else()
     endif()
 
     if(OS MATCHES "^(FreeRTOS)$")
+        add_definitions(-DSDT)
         set(CMAKE_C_COMPILER armr5-none-eabi-gcc)
         set(CMAKE_SYSTEM_NAME Generic)
         set(CMAKE_SYSTEM_PROCESSOR arm)
