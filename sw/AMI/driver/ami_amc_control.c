@@ -2,7 +2,7 @@
 /*
  * ami_amc_control.c - This file contains AMC control implementation.
  *
- * Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 #include <linux/kthread.h>
@@ -712,7 +712,7 @@ static int check_amc_supported_version(struct amc_control_ctxt	*amc_ctrl_ctxt,
 	if (!amc_ctrl_ctxt)
 		return -EINVAL;
 
-	if ((GIT_TAG_VER_MAJOR == major) && (GIT_TAG_VER_MINOR == minor)) {
+	if ((GIT_TAG_VER_MAJOR == major) && (GIT_TAG_VER_MINOR >= minor)) {
 		AMI_INFO(amc_ctrl_ctxt, "AMC Supported Version : %d.%d", major, minor);
 		return SUCCESS;
 	}
