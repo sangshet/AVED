@@ -42,9 +42,11 @@ static int dev_major = 0;  /* This will be overriden. */
  * Return: NULL.
  */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 2, 0)
-static char *devnode(const struct device *dev, umode_t *mode)
+    static char *devnode(const struct device *dev, umode_t *mode)
+#elif defined(RHEL_RELEASE_VERSION) && LINUX_VERSION_CODE >= KERNEL_VERSION(5, 14, 0)
+    static char *devnode(const struct device *dev, umode_t *mode)
 #else
-static char *devnode(struct device *dev, umode_t *mode)
+    static char *devnode(struct device *dev, umode_t *mode)
 #endif
 {
 	if (mode)
@@ -745,7 +747,10 @@ int create_cdev(unsigned baseminor, struct drv_cdev_struct *drv_cdev,
 
 	if(!drv_cdev->dev_class) {
 		cls_created = true;
-		#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 4, 0)
+
+		#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 2, 0)
+			drv_cdev->dev_class = class_create(drv_cdev->drv_cls_str);
+		#elif defined(RHEL_RELEASE_VERSION) && LINUX_VERSION_CODE >= KERNEL_VERSION(5, 14, 0)
 			drv_cdev->dev_class = class_create(drv_cdev->drv_cls_str);
 		#else
 			drv_cdev->dev_class = class_create(THIS_MODULE, drv_cdev->drv_cls_str);
