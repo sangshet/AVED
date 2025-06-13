@@ -65,7 +65,7 @@ class Options(object):
                     'force',
                     'version',
                     'no_driver',
-                    'no_gen_version'
+                    'no_gen_version',
                 ]
             )
         except getopt.GetoptError as e:
@@ -189,54 +189,59 @@ def main(args):
         step = 'get system info'
         start_time = start_step('GEN_PACKAGE-39', step)
 
-        # Get System info
+        # Get distribution ID from /etc/os-release
+        log_file_name = os.path.abspath(os.path.join(output_dir, 'os-release.log'))
+        log_info('GEN_PACKAGE-5', 'Get distribution ID from /etc/os-release')
+
         config['system'] = {}
 
-        # Get config['system']['distribution_id']
-        cmd = [ 'lsb_release', '-is']
-        log_file_name = os.path.abspath(os.path.join(output_dir, 'lsb_release_is.log'))
-        log_info('GEN_PACKAGE-5', 'Get distribution ID')
-        exec_step_cmd('GEN_PACKAGE-15', step, cmd, log_file_name)
+        with open('/etc/os-release', 'r') as f:
+            for line in f:
+                if line.startswith('ID='):
+                    config['system']['distribution_id'] = line.strip().split('=')[1].strip('"')
+                    break
+
+
+        with open(log_file_name, 'w') as log_file:
+            log_file.write(config['system']['distribution_id'] + '\n')
+
         check_output_file_exists('GEN_PACKAGE-5', log_file_name)
 
-        log_file = open(log_file_name, mode='r')
-        for line in log_file:
-            config['system']['distribution_id'] = line.split('\n')[0]
-            break
-        log_file.close()
-
-        if config['system']['distribution_id'] not in SUPPORTED_DIST_ID:
+        if config['system']['distribution_id'].lower() not in [d.lower() for d in SUPPORTED_DIST_ID]:
             exit_error('GEN_PACKAGE-14', 'Invalid Distribution ID: ' + config['system']['distribution_id'] + '. Supported values are ' + str(SUPPORTED_DIST_ID))
 
         log_info('GEN_PACKAGE-16', 'Current distribution ID: ' + config['system']['distribution_id'])
 
-        # Get config['system']['distribution_release']
-        cmd = [ 'lsb_release', '-rs']
-        log_file_name = os.path.abspath(os.path.join(output_dir, 'lsb_release_rs.log'))
-        exec_step_cmd('GEN_PACKAGE-15', step, cmd, log_file_name)
-        log_file = open(log_file_name, mode='r')
-        for line in log_file:
-            config['system']['distribution_release'] = line.split('\n')[0]
-            break
-        log_file.close()
+
+        # Get distribution release version from /etc/os-release
+        log_file_name = os.path.abspath(os.path.join(output_dir, 'os_release.log'))
+        with open('/etc/os-release', 'r') as f:
+            for line in f:
+                if line.startswith('VERSION_ID='):
+                    config['system']['distribution_release'] = line.strip().split('=')[1].strip('"')
+                    break
+
+        with open(log_file_name, 'w') as log_file:
+            log_file.write(config['system']['distribution_release'] + '\n')
+
 
         # Only use the major release number of CentOS and RedHat
-        if config['system']['distribution_id'] in [DIST_ID_CENTOS, DIST_ID_REDHAT, DIST_ID_REDHAT2]:
+        if config['system']['distribution_id'].lower() in [d.lower() for d in  [DIST_ID_CENTOS, DIST_ID_REDHAT, DIST_ID_REDHAT2, DIST_ID_RHEL]]:
             distribution_release_split = config['system']['distribution_release'].split('.')
             config['system']['distribution_release'] = distribution_release_split[0] + '.x'
 
         # architecture
-        if config['system']['distribution_id'] in DIST_DEB:
-            cmd = [ 'dpkg', '--print-architecture']
+        if config['system']['distribution_id'].lower() in [d.lower() for d in DIST_DEB]:
+            cmd = ['dpkg', '--print-architecture']
             log_file_name = os.path.abspath(os.path.join(output_dir, 'dpkg_print_architecture.log'))
             exec_step_cmd('GEN_PACKAGE-15', step, cmd, log_file_name)
-            log_file = open(log_file_name, mode='r')
-            for line in log_file:
-                config['system']['architecture'] = line.split('\n')[0]
-                break
-            log_file.close()
+            with open(log_file_name, mode='r') as log_file:
+                for line in log_file:
+                    config['system']['architecture'] = line.strip()
+                    break
         else:
-            config['system']['architecture'] = platform.machine() # 'x86_64'
+            config['system']['architecture'] = platform.machine()
+
 
         if config['system']['architecture'] not in SUPPORTED_ARCH:
             exit_error('GEN_PACKAGE-17', 'Invalid architecture: ' + config['system']['architecture'] + '. Supported values are ' + str(SUPPORTED_ARCH))
@@ -420,9 +425,9 @@ def main(args):
         config['package']['usr_bin'] = config['package']['usr_bin_dir'] + '/ami_tool'
         config['package']['usr_lib'] = config['package']['usr_lib_dir'] + '/libami.a'
 
-        if config['system']['distribution_id'] in DIST_RPM:
+        if config['system']['distribution_id'].lower() in [d.lower() for d in  DIST_RPM]:
             config['package']['pkg_config_dir'] = 'usr/lib64/pkgconfig'
-        elif config['system']['distribution_id'] in DIST_DEB:
+        elif config['system']['distribution_id'].lower()  in [d.lower() for d in DIST_DEB]:
             config['package']['pkg_config_dir'] = 'usr/lib/pkgconfig'
         else:
             config['package']['pkg_config_dir'] = 'usr/share/pkgconfig'
@@ -436,7 +441,7 @@ def main(args):
         ]
 
         # Create the file necessary to generate the packages
-        if config['system']['distribution_id'] in DIST_RPM:
+        if config['system']['distribution_id'].lower() in [d.lower() for d in DIST_RPM]:
             for dirname in ['BUILDROOT', 'RPMS', 'SOURCES', 'SPECS', 'SRPMS', 'BUILD']:
                 dir = os.path.abspath(os.path.join(output_dir, dirname))
                 os.makedirs(dir)
@@ -688,12 +693,13 @@ def main(args):
         check_output_file_exists('GEN_PACKAGE-5', module_pc_file_name)
 
         # Generate package
-        if config['system']['distribution_id'] in DIST_RPM:
+        if config['system']['distribution_id'].lower() in [d.lower() for d in DIST_RPM]:
             cmd = [
                 'rpmbuild', '--verbose',
                             '--define', '_topdir ' + output_dir,
                             '-bb',      spec_file_name
             ]
+
             log_file_name = os.path.abspath(os.path.join(log_dir, 'rpmbuild.log'))
 
             pkg_name  = config['package']['name'] + '-' + config['package']['version'] + '-' + config['package']['release'] + '.' + config['system']['architecture']
