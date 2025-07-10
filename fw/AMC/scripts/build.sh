@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2024 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+# Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
 # SPDX-License-Identifier: MIT
 
 ################################################################################
@@ -33,9 +33,6 @@ BUILD_LOG=$BUILD_DIR/build.log
 SCRIPT_START_TIME=$SECONDS
 
 chmod +x $SCRIPTS_DIR/*
-
-### Array of required git filenames ###
-GIT_FILES=(".uncrustify_rtos.cfg" "function_header.txt" "pre-commit" "commit-msg")
 
 ################################################################################
 ###                                 Functions                                ###
@@ -88,29 +85,6 @@ function print_help() {
     echo " ./scripts/build.sh -os Linux -amc"
     echo
     echo "========================================================================================="
-}
-
-function check_workspace_setup() {
-    for file in "${GIT_FILES[@]}"
-    do
-        if [ -f ".git/hooks/$file" ]; then
-            echo "Checking ==> $file"
-	    else
-            echo "Checking ==> $file"
-            echo "Error: file does not exist."
-            echo "Please run ./scripts/setupWorkspace.sh"
-            exit 1
-        fi
-    done
-
-    echo "Checking ==> uncrustify is installed"
-    check=$(command -v uncrustify)
-
-    if [ $? -ne 0 ]; then
-        echo "Error: uncrustify is not installed."
-        echo "Please run ./scripts/setupWorkspace.sh"
-        exit 1
-    fi
 }
 
 ################################################################################
@@ -187,9 +161,6 @@ while [ $# -gt 0 ]; do
     esac
     shift ### shift to next passed option ###
 done
-
-# Check setupWorkspace.sh script has run, and that uncrustify is installed.
-# check_workspace_setup
 
 # Remake build direcory
 if [ -d "$BUILD_DIR" ]; then

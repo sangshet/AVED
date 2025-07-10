@@ -11,7 +11,7 @@
 #define GIT_TAG_VER_DEV_COMMITS   (0)
 
 #define GIT_HASH                  "0bab29e568f64a25f17425c0ffd1c0e89609b6d1"
-#define GIT_DATE                  "20250609"
+#define GIT_DATE                  "20250710"
 #define GIT_BRANCH                ""
 #define GIT_STATUS                (0)
 

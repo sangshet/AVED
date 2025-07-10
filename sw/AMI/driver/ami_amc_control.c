@@ -966,6 +966,9 @@ static int heartbeat_health_thread(void *data)
 		amc_ctxt = (struct amc_control_ctxt *)data;
 	}
 
+	/* Wait 10 secs */
+	msleep(20 * HEARTBEAT_REQUEST_INTERVAL);
+
 	while (1) {
 		if (!fatal_event_raised && (fail_count < HEARTBEAT_FAIL_THRESHOLD)) {
 			ret = submit_gcq_command(amc_ctxt,
