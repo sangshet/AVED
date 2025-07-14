@@ -42,9 +42,9 @@ static DEFINE_XARRAY_ALLOC(cid_xarray);
  */
 #define REQUEST_DOWNLOAD_TIMEOUT                (msecs_to_jiffies(30000))       /* 30 seconds */
 #define REQUEST_COPY_TIMEOUT                    (msecs_to_jiffies(3600000))     /* 60 minutes - based on example max parition size of 128MB */
-#define REQUEST_HEARTBEAT_TIMEOUT               (msecs_to_jiffies(500))         /* 0.5 seconds */
-#define HEARTBEAT_REQUEST_INTERVAL              (500)
-#define LOGGING_SLEEP_INTERVAL                  (500)
+#define REQUEST_HEARTBEAT_TIMEOUT               (msecs_to_jiffies(5000))        /* 5.0 seconds */
+#define HEARTBEAT_REQUEST_INTERVAL              (1000)
+#define LOGGING_SLEEP_INTERVAL                  (1000)
 
 
 /* AMC Identify Command Version Major and Minor Numbers */

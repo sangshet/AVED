@@ -22,8 +22,12 @@
 # Connect the DMA reset detection signal to the PMC Interrupt input to allow a full PDI reload to be triggered on PCIe hot reset
 set PS9_IRQ_pin [get_pins -of [get_cells -hierarchical PS9_inst -filter { PARENT =~ "top_i/cips*"}] -filter { REF_PIN_NAME =~ "PMCPLIRQ[4]"}]
 if {[llength ${PS9_IRQ_pin}] == 1} {
+    # Remove dont_touch
+    set_property dont_touch 0 [get_nets -of [get_pins top_i/clock_reset/pcie_mgmt_pdi_reset/pcie_mgmt_pdi_reset_gpio/gpio2_io_i]]
+    set_property dont_touch 0 [get_cells top_i/cips/inst/pspmc_0/inst]
+    set_property dont_touch 0 [get_cells top_i/cips]
     disconnect_net -objects ${PS9_IRQ_pin}
-    connect_net -hierarchical -net [get_nets -of [get_pins top_i/clock_reset/pcie_mgmt_pdi_reset/and_0/Res]] -objects ${PS9_IRQ_pin}
+    connect_net -hierarchical -net [get_nets -of [get_pins top_i/clock_reset/pcie_mgmt_pdi_reset/pcie_mgmt_pdi_reset_gpio/gpio2_io_i]] -objects ${PS9_IRQ_pin}
 } else {
     puts "Unable to get PMCPLIRQ pin for Force Reset rewiring."
 }
