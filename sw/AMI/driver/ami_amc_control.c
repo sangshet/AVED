@@ -31,30 +31,30 @@ static DEFINE_XARRAY_ALLOC(cid_xarray);
 /* Defines                                                                   */
 /*****************************************************************************/
 
-#define MAX_COMMAND_IDS                         (255)
+#define MAX_COMMAND_IDS             (255)
 
-#define DEVICE_READY_SLEEP_INTERVAL             (100)
-#define DEVICE_READY_RETRY_COUNT                (5)
-#define REQUEST_MSQ_TIMEOUT                     (msecs_to_jiffies(30000))       /* 30 seconds */
+#define DEVICE_READY_SLEEP_INTERVAL (100)
+#define DEVICE_READY_RETRY_COUNT    (5)
+#define REQUEST_MSQ_TIMEOUT         (msecs_to_jiffies(30000))       /* 30 seconds */
 /*
  * Timeout for the PDI download can be small as we are packetising the
  * image and sending across one chunk at a time.
  */
-#define REQUEST_DOWNLOAD_TIMEOUT                (msecs_to_jiffies(30000))       /* 30 seconds */
-#define REQUEST_COPY_TIMEOUT                    (msecs_to_jiffies(3600000))     /* 60 minutes - based on example max parition size of 128MB */
-#define REQUEST_HEARTBEAT_TIMEOUT               (msecs_to_jiffies(5000))        /* 5.0 seconds */
-#define HEARTBEAT_REQUEST_INTERVAL              (1000)
-#define LOGGING_SLEEP_INTERVAL                  (1000)
+#define REQUEST_DOWNLOAD_TIMEOUT    (msecs_to_jiffies(30000))       /* 30 seconds */
+#define REQUEST_COPY_TIMEOUT        (msecs_to_jiffies(3600000))     /* 60 minutes - based on example max parition size of 128MB */
+#define REQUEST_HEARTBEAT_TIMEOUT   (msecs_to_jiffies(500))         /* 0.5 seconds */
+#define HEARTBEAT_REQUEST_INTERVAL  (500)
+#define LOGGING_SLEEP_INTERVAL      (500)
 
 
 /* AMC Identify Command Version Major and Minor Numbers */
-#define AMC_GCQ_IDENTIFY_CMD_MAJOR              (1)
-#define AMC_GCQ_IDENTIFY_CMD_MINOR              (0)
-#define AMC_GCQ_MAGIC_NO                        (0x564D5230)
-#define VERSION_BUF_SIZE                        (8)
+#define AMC_GCQ_IDENTIFY_CMD_MAJOR  (1)
+#define AMC_GCQ_IDENTIFY_CMD_MINOR  (0)
+#define AMC_GCQ_MAGIC_NO            (0x564D5230)
+#define VERSION_BUF_SIZE            (8)
 
 /* Number of permitted failures before raising a fatal event */
-#define HEARTBEAT_FAIL_THRESHOLD                (3)
+#define HEARTBEAT_FAIL_THRESHOLD    (3)
 
 
 /*****************************************************************************/
@@ -966,9 +966,6 @@ static int heartbeat_health_thread(void *data)
 		amc_ctxt = (struct amc_control_ctxt *)data;
 	}
 
-	/* Wait 10 secs */
-	msleep(20 * HEARTBEAT_REQUEST_INTERVAL);
-
 	while (1) {
 		if (!fatal_event_raised && (fail_count < HEARTBEAT_FAIL_THRESHOLD)) {
 			ret = submit_gcq_command(amc_ctxt,
@@ -1875,8 +1872,6 @@ int setup_amc(struct pci_dev		*dev,
 		}
 	}
 
-	vfree(version_buf);
-
 	/*
 	 * COMPAT MODE: heartbeat disabled, logging disabled.
 	 * When the AMC version does not match the current AMI version, we run
@@ -1907,6 +1902,7 @@ int setup_amc(struct pci_dev		*dev,
 	if (ret)
 		goto fail;
 
+	vfree(version_buf);
 	return SUCCESS;
 
 fail:

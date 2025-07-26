@@ -2,7 +2,7 @@
 /*
  * ami_cdev.c - This file contains logic related to AMI character device files.
  *
- * Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 #include <linux/pci.h>     /* pci_dev */
@@ -14,6 +14,7 @@
 #include <linux/types.h>
 #include <linux/hwmon.h>
 #include <linux/eventfd.h>
+#include <linux/version.h>
 
 #include "ami.h"
 #include "ami_hwmon.h"
@@ -476,9 +477,9 @@ long dev_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	case AMI_IOC_GET_FPT_HDR:
 	{
-                /* `arg` is a pointer to `struct ami_ioc_fpt_hdr_value` */
-                struct ami_ioc_fpt_hdr_value data = { 0 };
-                struct fpt_header hdr = { 0 };
+        /* `arg` is a pointer to `struct ami_ioc_fpt_hdr_value` */
+        struct ami_ioc_fpt_hdr_value data = { 0 };
+        struct fpt_header hdr = { 0 };
 
 		/* Read data payload from user. */
 		if (copy_from_user(&data, (struct ami_ioc_fpt_hdr_value*)arg, sizeof(data))) {
@@ -486,33 +487,33 @@ long dev_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			goto done;
 		}	
 
-                ret = read_fpt_hdr(pf_dev, data.boot_device, &hdr);
-                if (!ret) {
-                        data.version = hdr.version;
-                        data.hdr_size = hdr.header_size;
-                        data.entry_size = hdr.entry_size;
-                        data.num_entries = hdr.num_entries;
-                        ret = copy_to_user((struct ami_ioc_fpt_hdr_value*)arg,
-					   &data, sizeof(data));
-                }
-                break;
+        ret = read_fpt_hdr(pf_dev, data.boot_device, &hdr);
+        if (!ret) {
+            data.version = hdr.version;
+            data.hdr_size = hdr.header_size;
+            data.entry_size = hdr.entry_size;
+            data.num_entries = hdr.num_entries;
+            ret = copy_to_user((struct ami_ioc_fpt_hdr_value*)arg,
+			   &data, sizeof(data));
+        }
+        break;
 	}
 
 	case AMI_IOC_GET_FPT_PARTITION:
 	{
-                /* `arg` is a pointer to `struct ami_ioc_fpt_partition_value` */
-                struct ami_ioc_fpt_partition_value data = { 0 };
-                struct fpt_partition partition = { 0 };
+        /* `arg` is a pointer to `struct ami_ioc_fpt_partition_value` */
+        struct ami_ioc_fpt_partition_value data = { 0 };
+        struct fpt_partition partition = { 0 };
 
-                if (copy_from_user(&data, (struct ami_ioc_fpt_partition_value*)arg, sizeof(data))) {
-                        ret = -EFAULT;
-                        goto done;
-                }
+        if (copy_from_user(&data, (struct ami_ioc_fpt_partition_value*)arg, sizeof(data))) {
+            ret = -EFAULT;
+            goto done;
+        }
 
                 ret = read_fpt_partition(pf_dev,
-					 data.boot_device,
-                                         data.partition,
-                                         &partition);
+                          data.boot_device,
+                          data.partition,
+                          &partition);
                 if (!ret) {
                         data.type = partition.type;
                         data.base_addr = partition.base_addr;

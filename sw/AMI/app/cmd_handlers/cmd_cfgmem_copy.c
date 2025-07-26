@@ -2,7 +2,7 @@
 /*
  * cmd_cfgmem_copy.c - This file contains the implementation for the command "cfgmem_copy"
  * 
- * Copyright (c) 2023-present Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 /*****************************************************************************/
@@ -30,7 +30,7 @@
 
 #define PDI_CHUNK_MULTIPLIER		(1024)
 #define PDI_CHUNK_SIZE			(32)	/* Multiple of 1024 */
-#define COPY_CHUNK_DUR_MS		(70)	/* Est duration for partition chunk copy (ms) */
+#define COPY_CHUNK_DUR_MS		(800)	/* Est duration for partition chunk copy (ms) */
 #define SECOND_IN_MS			(1000) 
 
 /*****************************************************************************/

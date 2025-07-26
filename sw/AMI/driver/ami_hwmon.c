@@ -12,6 +12,7 @@
 #include <linux/err.h>           /* IS_ERR, PTR_ERR */
 #include <linux/string.h>        /* string functions */
 #include <linux/kernel.h>        /* container_of */
+#include <linux/version.h>       /* version */
 
 #include "ami.h"
 #include "ami_pcie.h"

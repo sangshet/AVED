@@ -13,6 +13,7 @@
 #include <linux/list.h>
 #include <linux/kref.h>
 #include <linux/semaphore.h>
+#include <linux/version.h>
 
 #include "ami.h"
 #include "ami_vsec.h"
