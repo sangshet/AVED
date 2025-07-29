@@ -17,27 +17,27 @@
 #include "xil_cache.h"
 #include "xsdps.h"
 
-#define HAL_UUID_SIZE       ( 16 )
-#define HAL_EMMC_FEATURE    ( 1 )
-#define HAL_EMMC_BASE_ADDR  ( XPAR_XSDPS_0_BASEADDR )
-#define HAL_EMMC_BLOCK_SIZE ( 512 )
-#define HAL_EMMC_MAX_BLOCKS ( 0x7690000 )                                      /* 64 GBytes / 512 Bytes */
+#define HAL_UUID_SIZE                   ( 16 )
+#define HAL_EMMC_FEATURE                ( 1 )
+#define HAL_EMMC_BASE_ADDR              ( XPAR_XSDPS_0_BASEADDR )
+#define HAL_EMMC_BLOCK_SIZE             ( 512 )
+#define HAL_EMMC_MAX_BLOCKS             ( 0x7690000 )   /* 64 GBytes / 512 Bytes */
 
-#define HAL_SMBUS_BASE_ADDR ( XPAR_SMBUS_0_BASEADDR )
-#define HAL_SMBUS_ADDR      ( 0x18 )
-#define HAL_SMBUS_INTERRUPT ( 117U)//XPAR_FABRIC_BASE_LOGIC_AXI_SMBUS_RPU_IP2INTC_IRPT_INTR )
+#define HAL_SMBUS_BASE_ADDR             ( XPAR_SMBUS_0_BASEADDR )
+#define HAL_SMBUS_ADDR                  ( 0x18 )
+#define HAL_SMBUS_INTERRUPT             ( 85U + 32U)	/* pl.dtsi base_logic_axi_smbus_rpu: smbus@80044000 { interrupts = < 0 85 4 > */
 
-#define HAL_EEPROM_VERSION            ( EEPROM_VERSION_4_0 )
-#define HAL_EEPROM_I2C_BUS            ( 0 )
-#define HAL_EEPROM_SLAVE_ADDRESS      ( 0x52 )
-#define HAL_EEPROM_ADDRESS_SIZE       ( 1 )
-#define HAL_EEPROM_PAGE_SIZE          ( 16 )
-#define HAL_EEPROM_NUM_PAGES          ( 16 )
-#define HAL_EEPROM_DEVICE_ID          ( 0x0A01 )
-#define HAL_EEPROM_DEVICE_ID_ADDRESS  ( 0x1A )
-#define HAL_EEPROM_DEVICE_ID_REGISTER ( 0x07 )
+#define HAL_EEPROM_VERSION              ( EEPROM_VERSION_4_0 )
+#define HAL_EEPROM_I2C_BUS              ( 0 )
+#define HAL_EEPROM_SLAVE_ADDRESS        ( 0x52 )
+#define HAL_EEPROM_ADDRESS_SIZE         ( 1 )
+#define HAL_EEPROM_PAGE_SIZE            ( 16 )
+#define HAL_EEPROM_NUM_PAGES            ( 16 )
+#define HAL_EEPROM_DEVICE_ID            ( 0x0A01 )
+#define HAL_EEPROM_DEVICE_ID_ADDRESS    ( 0x1A )
+#define HAL_EEPROM_DEVICE_ID_REGISTER   ( 0x07 )
 
-#define HAL_AMC_CLOCK_CONTROL        ( 1 )
+#define HAL_AMC_CLOCK_CONTROL           ( 1 )
 #if ( 0 != HAL_AMC_CLOCK_CONTROL )
 #ifdef XPAR_SHELL_UTILS_UCC_0_BASEADDR
 #define HAL_USER_CLOCK_CONTROL_BASE_ADDRESS ( XPAR_SHELL_UTILS_UCC_0_BASEADDR )

@@ -146,7 +146,7 @@ empyro create_bsp -t empty_application -w amc_bsp -s ${SDT}/system-top.dts -p ps
 empyro config_bsp -d amc_bsp -al xilfpga
 empyro config_bsp -d amc_bsp -al xilloader
 empyro config_bsp -d amc_bsp -st freertos freertos_support_static_allocation:true
-empyro config_bsp -d amc_bsp -st freertos freertos_tick_rate:10000
+empyro config_bsp -d amc_bsp -st freertos freertos_tick_rate:1000
 empyro config_bsp -d amc_bsp -st freertos freertos_total_heap_size:131072
 empyro build_bsp  -d amc_bsp
 cd ..

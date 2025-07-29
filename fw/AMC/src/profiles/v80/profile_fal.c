@@ -131,7 +131,7 @@ static FW_IF_MUXED_DEVICE_CFG xQsfpCfg1 =
     QSFP_IO_EXPANDER_I2C_ADDR,
     QSFP_I2C_ADDR,
     FW_IF_MUXED_DEVICE_HW_LEVEL_MEMORY_MAP
-};                                                                             /* QSFP 1 */
+};                                          /* QSFP 1 */
 static FW_IF_MUXED_DEVICE_CFG xQsfpCfg2 =
 {
     FW_IF_DEVICE_QSFP,
@@ -146,7 +146,7 @@ static FW_IF_MUXED_DEVICE_CFG xQsfpCfg2 =
     QSFP_IO_EXPANDER_I2C_ADDR,
     QSFP_I2C_ADDR,
     FW_IF_MUXED_DEVICE_HW_LEVEL_MEMORY_MAP
-};                                                                             /* QSFP 2 */
+};                                          /* QSFP 2 */
 static FW_IF_MUXED_DEVICE_CFG xQsfpCfg3 =
 {
     FW_IF_DEVICE_QSFP,
@@ -161,7 +161,7 @@ static FW_IF_MUXED_DEVICE_CFG xQsfpCfg3 =
     QSFP_IO_EXPANDER_I2C_ADDR,
     QSFP_I2C_ADDR,
     FW_IF_MUXED_DEVICE_HW_LEVEL_MEMORY_MAP
-};                                                                             /* QSFP 3 */
+};                                          /* QSFP 3 */
 static FW_IF_MUXED_DEVICE_CFG xQsfpCfg4 =
 {
     FW_IF_DEVICE_QSFP,
@@ -176,7 +176,7 @@ static FW_IF_MUXED_DEVICE_CFG xQsfpCfg4 =
     QSFP_IO_EXPANDER_I2C_ADDR,
     QSFP_I2C_ADDR,
     FW_IF_MUXED_DEVICE_HW_LEVEL_MEMORY_MAP
-};                                                                             /* QSFP 4 */
+};                                          /* QSFP 4 */
 static FW_IF_MUXED_DEVICE_CFG xDimmCfg =
 {
     FW_IF_DEVICE_DIMM,
@@ -191,7 +191,7 @@ static FW_IF_MUXED_DEVICE_CFG xDimmCfg =
     0,
     DIMM_I2C_ADDR,
     FW_IF_MUXED_DEVICE_HW_LEVEL_MEMORY_MAP
-};                                                                             /* DIMM */
+};                                          /* DIMM */
 static FW_IF_GCQ_CFG xGcqCfg =
 {
     ( uint64_t )HAL_BASE_LOGIC_GCQ_M2R_S01_AXI_BASEADDR,

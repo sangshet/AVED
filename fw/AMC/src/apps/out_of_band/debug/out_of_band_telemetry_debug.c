@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * This file contains the in band telemetry debug implementation
@@ -22,7 +22,7 @@
 /* Defines                                                                    */
 /******************************************************************************/
 
-#define AMC_OUT_OF_BAND_DBG_NAME "AMC_OUT_OF_BAND_DBG"
+#define AMC_OUT_OF_BAND_DBG_NAME        "AMC_OUT_OF_BAND_DBG"
 
 
 /******************************************************************************/

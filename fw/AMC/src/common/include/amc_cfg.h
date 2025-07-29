@@ -81,7 +81,7 @@
 /******************************************************************************/
 
 /**
- * @enum    AMC_EVENT_UNIQUE_IDS
+ * @enum    AMC_CFG_UNIQUE_IDS
  * @brief   Unique ID of each proxy driver
  */
 typedef enum AMC_CFG_UNIQUE_IDS
