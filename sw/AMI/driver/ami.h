@@ -2,14 +2,18 @@
 /*
  * ami.h - This file contains generic AMI driver definitions.
  *
- * Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 #ifndef AMI_DRIVER_H
 #define AMI_DRIVER_H
 
 #include <linux/printk.h>
+#include <linux/version.h>
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 11, 0)
+#include <linux/vmalloc.h>
+#endif
 /* Meta Information */
 #define MDL_VERSION     "1.0.0"
 #define MDL_DESCRIPTION "AVED Management Interface (AMI) is used to manage AVED-based devices through PCIe"

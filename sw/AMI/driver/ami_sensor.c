@@ -81,9 +81,9 @@ const char *sdr_repo_type_to_str(enum gcq_sdr_repo_type sdr)
  *
  * Return: The relevant command flag or 0.
  */
-enum gcq_submit_cmd_req get_flags_for_repo(enum gcq_sdr_repo_type repo_type)
+static enum gcq_submit_cmd_flags get_flags_for_repo(enum gcq_sdr_repo_type repo_type)
 {
-	enum gcq_submit_cmd_req ret = GCQ_CMD_FLAG_NONE;
+	enum gcq_submit_cmd_flags ret = GCQ_CMD_FLAG_NONE;
 
 	switch (repo_type) {
 	case SDR_TYPE_BDINFO:
@@ -129,7 +129,7 @@ enum gcq_submit_cmd_req get_flags_for_repo(enum gcq_sdr_repo_type repo_type)
  *
  * Return: 0 or negative error code.
  */
-int parse_sdr(struct amc_control_ctxt	*amc_ctrl_ctxt,
+static int parse_sdr(struct amc_control_ctxt	*amc_ctrl_ctxt,
 	      uint8_t			*sdr_buf,
 	      struct sdr_repo		*repo) /* TODO: Test with board info SDR */
 {
@@ -477,7 +477,7 @@ int parse_sdr(struct amc_control_ctxt	*amc_ctrl_ctxt,
  * checks the size against a hardcoded value (512).
  */
 #define SDR_RESP_LEN 4096
-
+#if 0
 /**
  * get_sdr_size() - Perform the GET_SDR_SIZE API call.
  * @amc_ctrl_ctxt: The top level AMC struct instance.
@@ -486,7 +486,7 @@ int parse_sdr(struct amc_control_ctxt	*amc_ctrl_ctxt,
  *
  * Return: 0 or negative error code.
  */
-int get_sdr_size(struct amc_control_ctxt	*amc_ctrl_ctxt,
+static int get_sdr_size(struct amc_control_ctxt	*amc_ctrl_ctxt,
 		 enum gcq_sdr_repo_type		repo_type,
 		 uint16_t			*sdr_size)
 {
@@ -552,7 +552,7 @@ done:
 
 	return ret;
 }
-
+#endif
 /**
  * get_sdr() - Perform the GET_SDR API call.
  * @amc_ctrl_ctxt: The top level AMC struct instance.
@@ -561,7 +561,7 @@ done:
  *
  * Return: 0 or negative error code.
  */
-int get_sdr(struct amc_control_ctxt	*amc_ctrl_ctxt,
+static int get_sdr(struct amc_control_ctxt	*amc_ctrl_ctxt,
 	    enum gcq_sdr_repo_type	repo_type,
 	    struct sdr_repo		*repo)
 {

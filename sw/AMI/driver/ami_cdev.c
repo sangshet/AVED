@@ -2,7 +2,7 @@
 /*
  * ami_cdev.c - This file contains logic related to AMI character device files.
  *
- * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 #include <linux/pci.h>     /* pci_dev */

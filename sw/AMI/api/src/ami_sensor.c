@@ -374,7 +374,7 @@ static int read_sensor_attr(struct ami_sensor_attr *attr)
 	char buf[AMI_HWMON_MAX_STR] = { 0 };
 	int ret = AMI_STATUS_ERROR;
 
-	if (!attr || !attr->hwmon)
+	if (!attr || attr->hwmon[0] == '\0')
 		return AMI_API_ERROR(AMI_ERROR_EINVAL);
 
 	if (read_hwmon(attr->hwmon, 0, NULL, buf) == AMI_STATUS_OK) {

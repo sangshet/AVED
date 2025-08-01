@@ -43,6 +43,7 @@ static int do_image_download(struct amc_control_ctxt *amc_ctrl_ctxt, uint8_t *bu
 	uint8_t  part = 0;
 	uint32_t bytes_written = 0;
 	uint32_t bytes_to_write = 0;
+	uint32_t i = 0;
 	bool rewrite_boot_tag = false;
 	/* Round up the total number of chunks */
 	uint16_t num_chunks = (size + ((PDI_CHUNK_SIZE * PDI_CHUNK_MULTIPLIER) - 1)) /
@@ -90,12 +91,14 @@ static int do_image_download(struct amc_control_ctxt *amc_ctrl_ctxt, uint8_t *bu
 			if (ret) 
 				break;
 
-			if (efd_ctx)
-			#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
-				eventfd_signal(efd_ctx);
-			#else
-				eventfd_signal(efd_ctx, bytes_to_write);
-			#endif
+			if (efd_ctx) {
+				#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+					for (int i = 0; i <= bytes_to_write; i++)
+						eventfd_signal(efd_ctx);
+				#else
+					eventfd_signal(efd_ctx, bytes_to_write);
+				#endif
+			}
 		} else {
 			uint32_t boot_tag = INVALID_BOOT_TAG;
 
@@ -148,12 +151,14 @@ static int do_image_download(struct amc_control_ctxt *amc_ctrl_ctxt, uint8_t *bu
 			MK_PDI_FLAGS(boot_device, partition, BOOT_TAG_CHUNK, true),
 			buf, (PDI_CHUNK_SIZE * PDI_CHUNK_MULTIPLIER));
 
-		if (!ret && efd_ctx)
-		#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
-			eventfd_signal(efd_ctx);
-		#else
-			eventfd_signal(efd_ctx, bytes_to_write);
-		#endif
+		if (!ret && efd_ctx) {
+			#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+				for (int i = 0; i < (PDI_CHUNK_SIZE * PDI_CHUNK_MULTIPLIER); i++)
+					eventfd_signal(efd_ctx);
+			#else
+				eventfd_signal(efd_ctx, bytes_to_write);
+			#endif
+		}
 	}
 
 	if (ret)
