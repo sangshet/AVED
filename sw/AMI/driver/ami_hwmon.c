@@ -300,7 +300,7 @@ static const struct hwmon_chip_info alveo_hwmon_info = {
  * 
  * Return: The equivalent sensor type or SENSOR_TYPE_INVALID.
  */
-static enum ami_sensor_type to_ami_sensor_type(enum hwmon_sensor_types type)
+enum ami_sensor_type to_ami_sensor_type(enum hwmon_sensor_types type)
 {
 	/* The ami sensor type maps directly to the SDR repo type. */
 	enum ami_sensor_type ret = SENSOR_TYPE_INVALID;
@@ -323,7 +323,7 @@ static enum ami_sensor_type to_ami_sensor_type(enum hwmon_sensor_types type)
  * 
  * Return: Corresponding ami_sensor_attribute (may be INVALID).
  */
-static enum ami_sensor_attribute to_ami_attribute(enum hwmon_sensor_types hwmon_type,
+enum ami_sensor_attribute to_ami_attribute(enum hwmon_sensor_types hwmon_type,
 		u32 hwmon_attr)
 {
 	enum ami_sensor_attribute ret = SENSOR_ATTR_INVALID;
@@ -483,7 +483,7 @@ umode_t alveo_is_visible(const void *data, enum hwmon_sensor_types type,
  * 
  * Return: 0 on success or negative error code.
  */
-static int get_sensor_value(struct pf_dev_struct *pf_dev, enum ami_sensor_type type,
+int get_sensor_value(struct pf_dev_struct *pf_dev, enum ami_sensor_type type,
 	enum ami_sensor_attribute attr, int sid, void *value)
 {
 	int ret = 0;
@@ -846,7 +846,7 @@ static struct attribute *temp_avg_attributes[] = {
 	NULL
 };
 
-static const struct attribute_group temp_avg_attr_group = {
+static struct attribute_group temp_avg_attr_group = {
 	.attrs = temp_avg_attributes,
 	.is_visible = is_visible_extra,
 };
@@ -1015,7 +1015,7 @@ static struct attribute *status_attributes[] = {
 	NULL
 };
 
-static const struct attribute_group status_attr_group = {
+static struct attribute_group status_attr_group = {
 	.attrs = status_attributes,
 	.is_visible = is_visible_extra,
 };
@@ -1185,12 +1185,12 @@ static struct attribute *label_attributes[] = {
 	NULL
 };
 
-static const struct attribute_group label_attr_group = {
+static struct attribute_group label_attr_group = {
 	.attrs = label_attributes,
 	.is_visible = is_visible_extra,
 };
 
-static const struct attribute_group *extra_groups[] = {
+const static struct attribute_group *extra_groups[] = {
 	&label_attr_group,
 	&status_attr_group,
 	&temp_avg_attr_group,

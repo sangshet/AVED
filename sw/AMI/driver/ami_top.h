@@ -2,7 +2,7 @@
 /*
  * ami_top.h - This file contains common AMI driver definitions.
  *
- * Copyright (C) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 #ifndef AMI_TOP_H
@@ -22,7 +22,7 @@
 #include "ami_cdev.h"
 #include "ami_amc_control.h"
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 11, 0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 12, 0)
 #include <linux/vmalloc.h>
 #endif
 

@@ -24,7 +24,6 @@
 #include <linux/delay.h>
 #include <linux/kthread.h>
 #include <linux/sched/signal.h>
-#include <linux/version.h>
 
 #include "ami.h"
 #include "ami_top.h"
@@ -418,7 +417,7 @@ void shutdown_pf_dev_services(struct pf_dev_struct *pf_dev)
  *
  * Return: None.
  */
-static void delete_pf_dev_data(struct pf_dev_struct *pf_dev, bool delete_managed)
+void delete_pf_dev_data(struct pf_dev_struct *pf_dev, bool delete_managed)
 {
 	struct pf_dev_application *pos = NULL, *next = NULL;
 
@@ -465,7 +464,6 @@ static void delete_pf_dev_data(struct pf_dev_struct *pf_dev, bool delete_managed
 void pcie_device_remove(struct pci_dev *dev)
 {
 	struct pf_dev_struct *pf_dev = NULL;
-	int ret = 0;
 
 	if (!dev)
 		return;
@@ -488,11 +486,7 @@ void pcie_device_remove(struct pci_dev *dev)
 
 	pci_disable_device(dev);                        /* Disable bus mastering regardless of the refcount */
 	kill_pf_dev_apps(pf_dev, SIGBUS);               /* Kill any applications that may still be running */
-	ret = down_interruptible(&pf_dev->remove_sema);       /* Wait until the refcount reaches 0 */
-	if (ret) {
-		PR_ERR("Failed to wait for device removal semaphore");
-		return;
-	}
+	down_interruptible(&pf_dev->remove_sema);       /* Wait until the refcount reaches 0 */
 	delete_pf_dev_data(pf_dev, false);              /* Safe to delete data */
 	DEV_INFO(dev, "Successfully removed PCIe device");
 }
@@ -723,7 +717,7 @@ int kill_pf_dev_apps(struct pf_dev_struct *pf_dev, int sig)
  *
  * Return: 0 or negative error code
  */
-static int create_map_str(char **map_str, int *map_str_sz)
+int create_map_str(char **map_str, int *map_str_sz)
 {
 	int ret = 0;
 	int num_entries = 0;
@@ -860,7 +854,7 @@ static ssize_t ami_debug_enabled_store(struct device_driver *drv, const char *bu
 	if (count > AMI_DEBUG_INPUT_LIMIT)
 		return -EINVAL;
 
-	sscanf(buf, "%d", &set_output_status);
+	sscanf(buf, "%hhd", &set_output_status);
 	ami_debug_enabled = set_output_status;
 
 	return count;
@@ -882,7 +876,7 @@ static ssize_t ami_debug_enabled_show(struct device_driver *drv, char *buf)
 }
 static DRIVER_ATTR_RW(ami_debug_enabled);
 
-static int __init vmc_entry(void)
+int __init vmc_entry(void)
 {
 	int ret = 0;
 
@@ -944,7 +938,7 @@ fail:
  * to enable this code only at module removal time.
  * Note - Do not call this function from anywhere in the code
  */
-static void __exit vmc_exit(void)
+void __exit vmc_exit(void)
 {
 	PR_DBG("Removing driver from the kernel");
 	PR_DBG("Unregister driver from PCIE Stack");
