@@ -22,9 +22,6 @@
 #include "ami_cdev.h"
 #include "ami_amc_control.h"
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 12, 0)
-#include <linux/vmalloc.h>
-#endif
 
 /* Device state strings. */
 #define STATE_NAME_INIT       	"INIT"

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * ami.c - This file contains the implementation of misc. API functions
- * 
- * Copyright (c) 2023-present Advanced Micro Devices, Inc. All rights reserved.
+ *
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  */
 
 /*****************************************************************************/
@@ -21,10 +21,12 @@
 #include <poll.h>
 #include <time.h>
 #include <sys/eventfd.h>
+#include <linux/version.h>
 
 /* Private API includes */
 #include "ami_internal.h"
 #include "ami_version.h"
+#include "ami_program.h"
 
 /*****************************************************************************/
 /* Defines                                                                   */
@@ -93,11 +95,19 @@ static void *ami_event_thread(void *data)
 			status = AMI_EVENT_STATUS_TIMEOUT;
 		}
 
-		d->callback(
-			status,
-			efd_ctr,
-			d->callback_data
+		#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+			d->callback(
+				status,
+				PDI_CHUNK_SIZE * PDI_CHUNK_MULTIPLIER,
+				d->callback_data
+			);
+		#else
+			d->callback(
+				status,
+				efd_ctr,
+				d->callback_data
 		);
+		#endif
 	}
 
 	return NULL;
@@ -187,7 +197,7 @@ int ami_set_last_error(enum ami_error err, const char *ctxt, ...)
 			error_ctxt
 		);
 		break;
-	
+
 	case AMI_ERROR_EBADF:
 		snprintf(
 			last_error_str,
@@ -232,7 +242,7 @@ int ami_set_last_error(enum ami_error err, const char *ctxt, ...)
 			error_ctxt
 		);
 		break;
-	
+
 	case AMI_ERROR_ENODEV:
 		snprintf(
 			last_error_str,
@@ -349,7 +359,7 @@ uint16_t ami_parse_bdf(const char *bdf)
 
 	if (!bdf)
 		return ret;
-	
+
 	/* Find position of first colon. */
 	c = strchr(bdf, ':');
 
@@ -378,7 +388,7 @@ int ami_watch_driver_events(struct ami_event_data *event_data,
 		return AMI_API_ERROR(AMI_ERROR_EINVAL);
 
 	/* Setup eventfd */
-	if ((efd = eventfd(0, 0)) == AMI_INVALID_FD) 
+	if ((efd = eventfd(0, 0)) == AMI_INVALID_FD)
 		return AMI_API_ERROR(EBADF);
 
 	/* Initialise thread data */
@@ -395,7 +405,7 @@ int ami_watch_driver_events(struct ami_event_data *event_data,
 		(void*)event_data
 	);
 
-	if (ret) 
+	if (ret)
 		return AMI_API_ERROR(AMI_ERROR_ERET);
 
 	event_data->thread_created = true;

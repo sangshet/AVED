@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2023 - 2025 Advanced Micro Devices, Inc. All rights reserved.
  * SPDX-License-Identifier: MIT
  *
  * This header file containing the FW IF GCQ abstraction definitions.
@@ -45,7 +45,7 @@ typedef enum _FW_IF_GCQ_MODE_TYPE
 
 /**
  * @enum FW_IF_GCQ_INTERRUPT_MODE_TYPE
- * @brief Enumeration of the mechanisum used to trigger interrupt 
+ * @brief Enumeration of the mechanisum used to trigger interrupt
  */
 typedef enum _FW_IF_GCQ_INTERRUPT_MODE_TYPE
 {
@@ -75,6 +75,7 @@ typedef enum _FW_IF_GCQ_EVENTS
  */
 typedef enum _FW_IF_GCQ_ERRORS_TYPE
 {
+    FW_IF_GCQ_ERRORS_NONE = FW_IF_ERRORS_NONE,
     FW_IF_GCQ_ERRORS_NO_FREE_PROFILES = MAX_FW_IF_ERROR,
     FW_IF_GCQ_ERRORS_INVALID_PROFILE,
     FW_IF_GCQ_ERRORS_NOT_SUPPORTED,
@@ -171,7 +172,7 @@ extern uint32_t ulFW_IF_GCQ_Create( FW_IF_CFG *pxFwIf, FW_IF_GCQ_CFG *pxGCQCfg )
  *
  * @return   OK                  Stats retrieved from gcq successfully
  *           ERROR               Stats not retrieved successfully
- * 
+ *
  *
  */
 int iFW_IF_GCQ_PrintStatistics( void );
@@ -182,7 +183,7 @@ int iFW_IF_GCQ_PrintStatistics( void );
  *
  * @return   OK                  Stats cleared successfully
  *           ERROR               Stats not cleared successfully
- * 
+ *
  *
  */
 int iFW_IF_GCQ_ClearStatistics( void );
