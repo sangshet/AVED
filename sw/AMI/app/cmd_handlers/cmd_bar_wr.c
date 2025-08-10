@@ -189,14 +189,14 @@ static int do_cmd_bar_wr(struct app_option *options, int num_args, char **args)
 		}
 
 		if (ret == AMI_STATUS_OK) {
-			ret = EXIT_SUCCESS;
 			printf("Successfully wrote to %d register(s)\r\n", num);
+			ret = EXIT_SUCCESS;
 		} else {
 			APP_API_ERROR("could not write data");
 		}
 	} else {
-		ret = EXIT_SUCCESS;
 		printf("\r\nAborting...\r\n");
+		ret = EXIT_SUCCESS;
 	}
 
 done:

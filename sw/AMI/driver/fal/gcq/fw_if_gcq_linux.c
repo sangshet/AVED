@@ -248,7 +248,7 @@ static GCQ_MODE_TYPE prvxMapMode( FW_IF_GCQ_MODE_TYPE xMode )
  *
  * @param   ppxGCQProfile is a variable to store the free GCQ profile
  *
- * @return  FW_IF_ERRORS_NONE if profile found, error otherwise
+ * @return  FW_IF_GCQ_ERRORS_NONE if profile found, error otherwise
  *
  */
 static uint32_t prvFindNextFreeProfile( FW_IF_GCQ_PROFILE_TYPE **ppxGCQProfile )
@@ -294,7 +294,7 @@ static uint32_t prvGCQOpen( void *pvFWIf )
         FW_IF_GCQ_CFG *pxCfg = ( FW_IF_GCQ_CFG* )pxThisIf->cfg;
         FW_IF_GCQ_PROFILE_TYPE *pxGCQProfile = NULL;
 
-        if( FW_IF_ERRORS_NONE != prvFindNextFreeProfile( &pxGCQProfile ) ) { return FW_IF_GCQ_ERRORS_NO_FREE_PROFILES; }
+        if( FW_IF_GCQ_ERRORS_NONE != prvFindNextFreeProfile( &pxGCQProfile ) ) { return FW_IF_GCQ_ERRORS_NO_FREE_PROFILES; }
         if( CHECK_NULL( pxGCQProfile ) ) { return FW_IF_GCQ_ERRORS_INVALID_PROFILE; }
 
         pxGCQProfile->ulIOHandle = 0;

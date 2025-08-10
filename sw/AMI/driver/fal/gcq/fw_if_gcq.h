@@ -106,7 +106,7 @@ typedef enum _FW_IF_GCQ_IOCTL_TYPE
 
     MAX_FW_IF_GCQ_IOCTRL_OPTION
 
-} _FW_IF_GCQ_IOCTL_TYPE;
+} FW_IF_GCQ_IOCTL_TYPE;
 
 
 /*****************************************************************************/
@@ -129,16 +129,16 @@ typedef struct _FW_IF_GCQ_INIT_CFG
  */
 typedef struct _FW_IF_GCQ_CFG
 {
-    uint64_t                            ullBaseAddress;
-    FW_IF_GCQ_MODE_TYPE                 xMode;
-    FW_IF_GCQ_INTERRUPT_MODE_TYPE       xInterruptMode;
-    uint64_t                            ullRingAddress;
-    uint32_t                            ulRingLength;
-    uint32_t                            ulCompletionQueueSlotSize;
-    uint32_t                            ulSubmissionQueueSlotSize;
-    uint8_t                             udid[ FW_IF_GCQ_UDID_LEN ];
+    uint64_t                        ullBaseAddress;
+    FW_IF_GCQ_MODE_TYPE             xMode;
+    FW_IF_GCQ_INTERRUPT_MODE_TYPE   xInterruptMode;
+    uint64_t                        ullRingAddress;
+    uint32_t                        ulRingLength;
+    uint32_t                        ulCompletionQueueSlotSize;
+    uint32_t                        ulSubmissionQueueSlotSize;
+    uint8_t                         udid[ FW_IF_GCQ_UDID_LEN ];
 
-    void                                *pvProfile;      /* opaque handle to store internal context */
+    void                            *pvProfile;      /* opaque handle to store internal context */
 
 } FW_IF_GCQ_CFG;
 
@@ -154,7 +154,7 @@ typedef struct _FW_IF_GCQ_CFG
  *
  * @return  See FW_IF_ERRORS
  ******************************************************************************************/
-extern uint32_t ulFW_IF_GCQ_Init( FW_IF_GCQ_INIT_CFG *pxInitCfg );
+uint32_t ulFW_IF_GCQ_Init(FW_IF_GCQ_INIT_CFG *pxInitCfg);
 
 /*******************************************************************************************
  * @brief   creates an instance of the GCQ interface
@@ -164,7 +164,7 @@ extern uint32_t ulFW_IF_GCQ_Init( FW_IF_GCQ_INIT_CFG *pxInitCfg );
  *
  * @return  See FW_IF_ERRORS
  ******************************************************************************************/
-extern uint32_t ulFW_IF_GCQ_Create( FW_IF_CFG *pxFwIf, FW_IF_GCQ_CFG *pxGCQCfg );
+uint32_t ulFW_IF_GCQ_Create( FW_IF_CFG *pxFwIf, FW_IF_GCQ_CFG *pxGCQCfg );
 
 /**
  *

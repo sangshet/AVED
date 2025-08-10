@@ -22,7 +22,6 @@
 #include <time.h>
 #include <sys/eventfd.h>
 #include <sys/utsname.h>
-#include <linux/version.h>
 
 /* Private API includes */
 #include "ami_internal.h"
@@ -95,14 +94,17 @@ static int kernel_version_cmp(const char *v) {
 static void *ami_event_thread(void *data)
 {
 	struct ami_event_data *d = NULL;
+	struct ami_pdi_progress *p = NULL;
 	struct pollfd mypoll = { 0 };
 	uint64_t efd_ctr = 0;
+	uint64_t chunk_size = PDI_CHUNK_SIZE * PDI_CHUNK_MULTIPLIER;
 	enum ami_event_status status = AMI_EVENT_STATUS_TIMEOUT;
 
 	if (!data)
 		return NULL;
 
 	d = (struct ami_event_data*)data;
+	p = d->callback_data;
 
 	/* callback is necessary */
 	if (!(d->callback))
@@ -121,10 +123,10 @@ static void *ami_event_thread(void *data)
 			status = AMI_EVENT_STATUS_TIMEOUT;
 		}
 
-		if (kernel_version_cmp("6.8.0")) {
+		if (kernel_version_cmp("6.8.0") >= 0) {
 			d->callback(
 				status,
-				PDI_CHUNK_SIZE * PDI_CHUNK_MULTIPLIER,
+				p->bytes_to_write > chunk_size ? chunk_size : p->bytes_to_write,
 				d->callback_data
 			);
 		} else {
