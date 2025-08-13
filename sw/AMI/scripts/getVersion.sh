@@ -16,16 +16,25 @@
 #
 # This file will not be tracked by git
 
-if [ "$#" -eq 1 ]; then
+GIT_HASH="$(git rev-parse HEAD)"
+GIT_DATE="$(git log -1 --pretty=format:"%cd" --date=format:"%Y%m%d")"
+
+if [ "$#" -ge 1 ]; then
     MODULE_NAME=$1
 else
     MODULE_NAME=${PWD##*/}
 fi
+IN_DIR="${2:-.}"
 
-VERSION_AMI_FILE="./api/include/ami_version.h"
+AMI_SRC_VERSION_FILE="$IN_DIR/include/ami_version.h"
+AMI_DST_VERSION_FILE="$IN_DIR/build/ami_version.h"
+DRIVER_SRC_VERSION_FILE="$IN_DIR/ami_driver_version.h.in"
+DRIVER_DST_VERSION_FILE="$IN_DIR/ami_driver_version.h"
+
 AMI_STR="ami"
-VERSION_GCQ_FILE="./src/gcq_version.h"
+GCQ_VERSION_FILE="./src/gcq_version.h"
 GCQ_STR="gcq"
+DRIVER_STR="driver"
 
 ################################################################################
 ###                                 Functions                                ###
@@ -39,17 +48,24 @@ GCQ_STR="gcq"
 function catVersionHeaderFile {
 
     if [ "$MODULE_NAME" = "$AMI_STR" ]; then
-        cat $VERSION_AMI_FILE
-        elif [ "$MODULE_NAME" = "$GCQ_STR" ]; then
-            cat $VERSION_GCQ_FILE
-        else
-            echo "No version file found..."
+        cp $AMI_SRC_VERSION_FILE  $AMI_DST_VERSION_FILE
+        sed -i -E "s/#define GIT_HASH.*/#define GIT_HASH                  \"${GIT_HASH}\"/" $AMI_DST_VERSION_FILE
+        sed -i -E "s/#define GIT_DATE.*/#define GIT_DATE                  \"${GIT_DATE}\"/" $AMI_DST_VERSION_FILE
+    elif [ "$MODULE_NAME" = "$GCQ_STR" ]; then
+        cat $GCQ_VERSION_FILE
+    elif [ "$MODULE_NAME" = "$DRIVER_STR" ]; then
+        cp $DRIVER_SRC_VERSION_FILE  $DRIVER_DST_VERSION_FILE
+        sed -i -E "s/#define GIT_HASH.*/#define GIT_HASH                  \"${GIT_HASH}\"/" $DRIVER_DST_VERSION_FILE
+        sed -i -E "s/#define GIT_DATE.*/#define GIT_DATE                  \"${GIT_DATE}\"/" $DRIVER_DST_VERSION_FILE
+    else
+        echo "No version file found..."
     fi
 }
 ################################################################################
 
 function getVersionMain {
     echo -e "\r\nRunning $0"
+    mkdir -p $IN_DIR/build
     catVersionHeaderFile
     echo -e "Done\r\n"
 }

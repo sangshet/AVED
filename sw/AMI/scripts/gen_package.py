@@ -31,14 +31,14 @@ class Options(object):
 
     def printHelp(self):
         log_info('GEN_PACKAGE-6', 'Usage: $ python3 ' + SCRIPT_FILE + ' [options]')
-        log_info('GEN_PACKAGE-6', '\t--help                 / -h: Display this message')
-        log_info('GEN_PACKAGE-6', '\t--output_dir           / -o: Path to the output directory. Default: ./output/<date>_<time>')
-        log_info('GEN_PACKAGE-6', '\t--pkg_release          / -r: Package release. Default <date>')
-        log_info('GEN_PACKAGE-6', '\t--verbose              / -V: Turn on verbosity')
-        log_info('GEN_PACKAGE-6', '\t--force                / -f: Override output directory if already existing')
-        log_info('GEN_PACKAGE-6', '\t--version              / -v: Display version')
-        log_info('GEN_PACKAGE-6', '\t--no_driver            / -n: No driver built during gen_package - docker build option only')
-        log_info('GEN_PACKAGE-6', '\t--no_gen_version       / -g: No genVersion scripts run during gen_package - docker build option only')
+        log_info('GEN_PACKAGE-6', '\t--help              / -h: Display this message')
+        log_info('GEN_PACKAGE-6', '\t--output_dir        / -o: Path to the output directory. Default: ./output/<date>_<time>')
+        log_info('GEN_PACKAGE-6', '\t--pkg_release       / -r: Package release. Default <date>')
+        log_info('GEN_PACKAGE-6', '\t--verbose           / -V: Turn on verbosity')
+        log_info('GEN_PACKAGE-6', '\t--force             / -f: Override output directory if already existing')
+        log_info('GEN_PACKAGE-6', '\t--version           / -v: Display version')
+        log_info('GEN_PACKAGE-6', '\t--no_driver         / -n: No driver built during gen_package - docker build option only')
+        log_info('GEN_PACKAGE-6', '\t--no_gen_version    / -g: No genVersion scripts run during gen_package - docker build option only')
         log_info('GEN_PACKAGE-6', '')
 
     def __init__(self):
@@ -266,9 +266,9 @@ def main(args):
             # Get package version
             step = 'get AMI version'
             start_time = start_step('GET_VER', step)
-            get_ver = './scripts/getVersion.sh ami'
-            exec_step_cmd('GEN_VERSION', step, get_ver, shell=True, cwd=PROJECT_DIR)
-            check_output_file_exists('GET_VER', join(PROJECT_DIR, 'api', 'include', 'ami_version.h'))
+            get_ver = '../scripts/getVersion.sh ami'
+            exec_step_cmd('GEN_VERSION', step, get_ver, shell=True, cwd=join(PROJECT_DIR, 'api'))
+            check_output_file_exists('GET_VER', join(PROJECT_DIR, 'api', 'build', 'ami_version.h'))
             end_step('GET_VER', start_time)
 
             # Get GCQ driver version
@@ -277,6 +277,14 @@ def main(args):
             get_ver = './getVersion.sh gcq'
             exec_step_cmd('GEN_VERSION', step, get_ver, shell=True, cwd=join(PROJECT_DIR, 'driver', 'gcq-driver'))
             check_output_file_exists('GET_VER', join(PROJECT_DIR, 'driver', 'gcq-driver', 'src', 'gcq_version.h'))
+            end_step('GET_VER', start_time)
+
+            # Get AMI driver version
+            step = 'get AMI Driver version'
+            start_time = start_step('GET_VER', step)
+            get_ver = '../scripts/getVersion.sh driver'
+            exec_step_cmd('GEN_VERSION', step, get_ver, shell=True, cwd=join(PROJECT_DIR, 'driver'))
+            check_output_file_exists('GET_VER', join(PROJECT_DIR, 'driver', 'ami_driver_version.h'))
             end_step('GET_VER', start_time)
 
         # If a directory is present in this dictionary, we will only include the
@@ -311,34 +319,37 @@ def main(args):
 
                 driver.append(join(path, name).split(PROJECT_DIR)[-1].split('/', 1)[-1])
 
+        config['package']                = {}
+        config['package']['name']        = 'ami'
+        config['package']['release']     = opt.pkg_release
+        config['package']['summary']     = config['package']['name']  + ' driver package'
+        config['package']['description'] = [config['package']['name'] + ' driver package', 'Built on ' + build_date_short + '.']
+        config['package']['changelog']   = config['package']['name']  + ' driver package. Built on $build_date_short.'
+
+        # Find version from generated header file
+        ami_ver_file = join(PROJECT_DIR, 'api', 'build', 'ami_version.h')
+        if not os.path.isfile(ami_ver_file):
+            ami_ver_file = join(PROJECT_DIR, 'api', 'include', 'ami_version.h')
+
         # Find API sources
         for path, _, files in walk(join(PROJECT_DIR, 'api', 'include')):
             for name in files:
                 api_headers.append(join(path, name).split(PROJECT_DIR)[-1].split('/', 1)[-1])
 
-        config['package']                       = {}
-        config['package']['name']               = 'ami'
-        config['package']['release']            = opt.pkg_release
-        config['package']['summary']            = config['package']['name'] + ' driver package'
-        config['package']['description']        = [
-            config['package']['name'] + ' driver package',
-            'Built on ' + build_date_short + '.'
-        ]
-        config['package']['changelog']          = config['package']['name'] + ' driver package. Built on $build_date_short.'
+        api_headers.append(ami_ver_file)
 
-        # Find version from generated header file
-        with open(join(PROJECT_DIR, 'api', 'include', 'ami_version.h'), 'r') as fd:
-                data = fd.read()
+        with open(ami_ver_file, 'r') as fd:
+            data = fd.read()
 
-                v = re.findall(r'GIT_TAG.*?\"(\d+\.\d+\.\d+).*\"$', data, re.M)
-                c = re.findall(r'GIT_TAG_VER_DEV_COMMITS.*?\((\d+)\)$', data, re.M)
-                h = re.findall(r'GIT_HASH.*?\"(.*?)\"$', data, re.M)
+            v = re.findall(r'GIT_TAG.*?\"(\d+\.\d+\.\d+).*\"$', data, re.M)
+            c = re.findall(r'GIT_TAG_VER_DEV_COMMITS.*?\((\d+)\)$', data, re.M)
+            h = re.findall(r'GIT_HASH.*?\"(.*?)\"$', data, re.M)
 
-                # Set version
-                config['package']['version'] = v[0] if v else '0.0.0'
+            # Set version
+            config['package']['version'] = v[0] if v else '0.0.0'
 
-                # Set release
-                config['package']['release'] = f'{c[0] if c else 0}.{h[0][:8] if h else ""}.{opt.pkg_release}'
+            # Set release
+            config['package']['release'] = f'{c[0] if c else 0}.{h[0][:8] if h else ""}.{opt.pkg_release}'
 
         with open(os.path.abspath(os.path.join(SCRIPT_DIR, 'package_data', 'postinst.sh')), 'r') as infile:
             fdata = infile.read()
